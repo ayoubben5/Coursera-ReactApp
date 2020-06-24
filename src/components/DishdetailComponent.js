@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import { Card,CardImg,CardText,CardBody,CardTitle,Breadcrumb,BreadcrumbItem,Button,Modal,ModalHeader,ModalBody,Label,Col,Row } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import {Control, LocalForm,Errors} from 'react-redux-form';
-    
+import {Loading} from './LoadingComponent';
 const minLength = (len) => (val) => val && (val.length > len);
 const maxLength = (len) => (val) => !val || (val.length <= len);
 
@@ -20,7 +20,7 @@ const maxLength = (len) => (val) => !val || (val.length <= len);
             );
         }
             
-        function RenderComments({comments}){
+        function RenderComments({comments, addComment, dishId}){
                
                 if(comments != null){
                     
@@ -34,13 +34,13 @@ const maxLength = (len) => (val) => !val || (val.length <= len);
                                         {comments.map((comment) => {
                                 return(
                                        <li key={comment.id}>
-                                       <p> --{comment.comment} </p> <br/>
+                                       <p> --{comment.comment} </p> 
                                        <p> {comment.author} ,{comment.date} </p>
                                        </li>
                                     );
                                     })}
                                     </ul>
-                                    <CommentForm />
+                                    <CommentForm dishId={dishId} addComment={addComment} />
                                     <br/>
                                     <br/>
                                     </div>);
@@ -54,7 +54,24 @@ const maxLength = (len) => (val) => !val || (val.length <= len);
               
             
    const DishDetail = (props) => { 
-        if(props.dish != null){
+       if (props.isLoading){
+
+            return(
+            <div className="container">
+                <div className="row">
+                <Loading/>
+                </div>
+            </div>);
+       }
+       else if(props.errMess) {
+        return(
+            <div className="container">
+                <div className="row">
+                <h4>{props.errMess}</h4>
+                </div>
+            </div>);
+       }
+        else if(props.dish != null){
         
          return(
             <div className="container">
@@ -72,7 +89,10 @@ const maxLength = (len) => (val) => !val || (val.length <= len);
             
             
              <RenderDish dish={props.dish}/>
-             <RenderComments comments={props.comments}/>
+             <RenderComments comments={props.comments} 
+                 addComment={props.addComment} 
+                 dishId={props.dish.id}
+             />
              
            </div>
             </div>
@@ -98,8 +118,9 @@ const maxLength = (len) => (val) => !val || (val.length <= len);
         }
     
         handleSubmit(values){
-    console.log("the comment is "+JSON.stringify(values));
- alert("the comment is "+JSON.stringify(values)); }
+            this.toggleModal();
+            this.props.addComment(this.props.dishId,values.rating,values.name,values.comment);
+    }
         
         render(){
             return( <>
