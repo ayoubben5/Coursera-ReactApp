@@ -21,7 +21,7 @@ const maxLength = (len) => (val) => !val || (val.length <= len);
             );
         }
             
-        function RenderComments({comments, addComment, dishId}){
+        function RenderComments({comments, postComment, dishId}){
                
                 if(comments != null){
                     
@@ -41,7 +41,7 @@ const maxLength = (len) => (val) => !val || (val.length <= len);
                                     );
                                     })}
                                     </ul>
-                                    <CommentForm dishId={dishId} addComment={addComment} />
+                                    <CommentForm dishId={dishId} postComment={postComment} />
                                     <br/>
                                     <br/>
                                     </div>);
@@ -91,7 +91,7 @@ const maxLength = (len) => (val) => !val || (val.length <= len);
             
              <RenderDish dish={props.dish}/>
              <RenderComments comments={props.comments} 
-                 addComment={props.addComment} 
+                 postComment={props.postComment} 
                  dishId={props.dish.id}
              />
              
@@ -120,7 +120,7 @@ const maxLength = (len) => (val) => !val || (val.length <= len);
     
         handleSubmit(values){
             this.toggleModal();
-            this.props.addComment(this.props.dishId,values.rating,values.name,values.comment);
+            this.props.postComment(this.props.dishId,values.rating,values.name,values.comment);
     }
         
         render(){
